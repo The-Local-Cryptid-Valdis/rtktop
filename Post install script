@@ -2,9 +2,7 @@
 
 set -euo pipefail
 
-# Installs list of packages
 echo "Installing packages with pacman"
-
 sudo pacman -Syu \
     bash-completion \
     grim \
@@ -54,7 +52,9 @@ sudo pacman -Syu \
     dnsmasq \
     mpv
 
-# Enable and config firewall
+
+
+
 echo "Enabling and starting firewalld"
 sudo systemctl enable --now firewalld.service
 
@@ -70,20 +70,24 @@ sudo systemctl preset firewalld.service
 echo "Setting firewalld default zone and allowed ports/services"
 sudo firewall-cmd --set-default-zone=drop
 
-# Add allowed ports and services
+# Adds http,https,dns and dhcp to allow list
 PORTS=(80/tcp 443/tcp 53/udp 67/udp 68/udp)
 for PORT in "${PORTS[@]}"; do
     echo "Adding port $PORT to drop zone"
     sudo firewall-cmd --zone=drop --add-port=$PORT --permanent
 done
 
-# Save and reload firewall config
 sudo firewall-cmd --runtime-to-permanent
 sudo firewall-cmd --reload
 
-#Lock Root account
+
+
+
 echo "Locking root account"
 sudo passwd -l root
+
+
+
 
 echo "Installing Flatpak apps"
 FLATPAKS=(
@@ -98,4 +102,17 @@ for APP in "${FLATPAKS[@]}"; do
     flatpak install -y flathub "$APP"
 done
 
-echo "Post-install setup complete! Reboot recommended."
+
+
+
+echo "Copying Themes to folder"
+if [[ -d ~/Downloads/rtktop-main/Rices ]]; then
+    cp -r ~/Downloads/rtktop-main/Rices ~/Documents/
+else
+    echo "Theme folder not found: ~/Downloads/rtktop-main/Rices"
+fi
+
+
+
+
+echo "Shits done"
