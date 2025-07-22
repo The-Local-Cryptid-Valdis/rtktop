@@ -8,45 +8,45 @@ echo "Installing packages with pacman"
 sudo pacman -Syu \
     bash-completion \
     grim \
+    w3m \
+    imagemagick \
+    slurp \
     pavucontrol \
-    kitty \
+    btop \
+    unzip \
+    flatpak \
+    bubblewrap-suid \
+    uwsm \
+    waybar \
     hyprpaper \
     polkit \
     polkit-kde-agent \
-    firewalld \
+    xdg-desktop-portal \
+    xdg-desktop-portal-gtk \
+    kitty \
+    ristretto \
+    mousepad \
     thunar \
     gvfs \
     gnome-disk-utility \
-    ristretto \
-    gimp \
-    w3m \
-    imagemagick \
     ttf-jetbrains-mono \
     ttf-jetbrains-mono-nerd \
-    waybar \
-    btop \
     adobe-source-han-sans-jp-fonts \
     adobe-source-han-serif-jp-fonts \
-    breeze \
-    breeze-gtk \
-    unzip \
+    ttf-firacode-nerd \
     ttf-font-awesome \
     otf-font-awesome \
-    slurp \
-    flatpak \
+    breeze \
+    breeze-gtk \
     networkmanager \
     network-manager-applet \
     networkmanager-openvpn \
     networkmanager-qt5 \
     networkmanager-qt \
     nm-connection-editor \
-    bubblewrap-suid \
     openresolv \
     wireguard-tools \
-    xdg-desktop-portal \
-    xdg-desktop-portal-gtk \
-    uwsm \
-    ttf-firacode-nerd \
+    firewalld \
     qemu-desktop \
     libvirt \
     edk2-ovmf \
@@ -90,6 +90,7 @@ FLATPAKS=(
   "io.gitlab.librewolf-community"
   "dev.vencord.Vesktop"
   "com.vscodium.codium"
+  "org.gimp.GIMP"
 )
 
 for APP in "${FLATPAKS[@]}"; do
