@@ -2,6 +2,12 @@
 
 set -euo pipefail
 
+
+SRC_DIR="$HOME/Downloads/rtktop-main"
+DEST_DIR="/home/rtk/"
+
+
+
 echo "Installing packages with pacman"
 sudo pacman -Syu \
     bash-completion \
@@ -104,8 +110,6 @@ done
 
 
 
-SRC_DIR="$HOME/Downloads/rtktop-main"
-DEST_DIR="/home/rtk/"
 
 mkdir -p "$DEST_DIR"
 
