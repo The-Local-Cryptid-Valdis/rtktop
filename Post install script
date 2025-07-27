@@ -106,12 +106,10 @@ done
 
 
 echo "Copying Themes to folder"
-if [[ -d ~/Downloads/rtktop-main/Rices ]]; then
-    cp -r ~/Downloads/rtktop-main/Rices ~/Documents/
-else
-    echo "Theme folder not found: ~/Downloads/rtktop-main/Rices"
-fi
 
+cp -r ~/Downloads/rtktop-main/Documents /home/rtk
+
+cp -r ~/Downloads/rtktop-main/Pictures /home/rtk
 
 
 
