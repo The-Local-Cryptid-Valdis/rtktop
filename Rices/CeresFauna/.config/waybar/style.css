@@ -1,0 +1,116 @@
+
+
+/* -----------------------------------------------------------------------------
+ * Base styles
+ * -------------------------------------------------------------------------- */
+
+/* Reset all styles */
+* {
+    border: 0;
+    border-radius: 0;
+    min-height: 0;
+    margin: 1px;
+    padding: 0;
+    color: #008000;
+}
+
+
+/* The whole bar */
+window#waybar {
+    /* color: #dfdfdf; */
+    background-color: rgba(0,0,0,0);
+    font-family: JetBrains Mono Nerd Font;
+    font-size: 14px;
+    color: #008000;
+}
+
+/* Every modules */
+#battery,
+#clock,
+#backlight,
+#cpu,
+#custom-keyboard-layout,
+#memory,
+#mode,
+#custom-weather,
+#network,
+#pulseaudio,
+#temperature,
+#tray,
+#idle_inhibitor,
+#window,
+#custom-power,
+#workspaces,
+
+
+/* -----------------------------------------------------------------------------
+ * Modules styles
+ * -------------------------------------------------------------------------- */
+
+#clock {
+    /* color: #ff4499; */
+    color: #008000;
+    font-size:14px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 20px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#cpu {
+    color: #FFD700;
+    font-size:14px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 20px;
+}
+
+#memory {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    color: #008000;
+    font-size:14px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 20px;
+}
+
+#mode {
+    /* background: @highlight; */
+    /* background: #dfdfdf; */
+    color:#ff4499;
+    font-size:14px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 20px;
+}
+
+#pulseaudio {
+    color: #FFD700;
+    font-size:14px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 20px;
+}
+
+#window {
+    font-weight: bold;
+    color: #008000;
+}
+
+#workspaces {
+    font-size:16px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 20px;
+    color: #008000;
+}
+
+button:hover {
+  box-shadow: none; /* Remove predefined box-shadow */
+  text-shadow: none; /* Remove predefined text-shadow */
+  background: none; /* Remove predefined background color (white) */
+  transition: none; /* Disable predefined animations */
+}
+
+#workspaces button.active {
+    border-bottom: 1px solid  #FFD700;
+    margin-bottom: 1px;
+    padding-left:0;
+}
