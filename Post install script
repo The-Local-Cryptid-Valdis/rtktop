@@ -104,13 +104,16 @@ done
 
 
 
+SRC_DIR="$HOME/Downloads/rtktop-main"
+DEST_DIR="/home/rtk/"
 
-echo "Copying Themes to folder"
+mkdir -p "$DEST_DIR"
 
-cp -r ~/Downloads/rtktop-main/Documents /home/rtk
+echo "Copying Documents..."
+rsync -av --progress "$SRC_DIR/Documents" "$DEST_DIR"
 
-cp -r ~/Downloads/rtktop-main/Pictures /home/rtk
-
+echo "Copying Pictures..."
+rsync -av --progress "$SRC_DIR/Pictures" "$DEST_DIR"
 
 
 echo "Shits done"
