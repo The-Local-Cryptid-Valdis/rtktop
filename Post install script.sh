@@ -109,7 +109,7 @@ done
 
 
 
-SRC_DIR="$HOME/Downloads/rtktop-main"
+SRC_DIR="$HOME/Downloads/rtktop"
 DEST_DIR="/home/rtk/"
 
 
