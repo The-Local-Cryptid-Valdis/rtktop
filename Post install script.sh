@@ -32,6 +32,7 @@ sudo pacman -Syu \
     mousepad \
     thunar \
     gvfs \
+    rsync \
     gnome-disk-utility \
     ttf-jetbrains-mono \
     ttf-jetbrains-mono-nerd \
