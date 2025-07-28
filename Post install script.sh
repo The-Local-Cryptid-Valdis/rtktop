@@ -116,10 +116,10 @@ DEST_DIR="/home/rtk/"
 mkdir -p "$DEST_DIR"
 
 echo "Copying Documents..."
-rsync -av --progress "$SRC_DIR/Documents" "$DEST_DIR"
+rsync -a "$SRC_DIR/Documents" "$DEST_DIR"
 
 echo "Copying Pictures..."
-rsync -av --progress "$SRC_DIR/Pictures" "$DEST_DIR"
+rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
 
 echo "Shits done"
