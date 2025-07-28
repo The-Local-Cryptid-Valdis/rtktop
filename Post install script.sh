@@ -122,4 +122,5 @@ echo "Copying Pictures..."
 rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
 
-echo "Shits done"
+echo "Shits done, You gotta run the which ever theme script to apply it"
+
