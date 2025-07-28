@@ -2,10 +2,8 @@
 
 set -euo pipefail
 
-
-SRC_DIR="$HOME/Downloads/rtktop-main"
-DEST_DIR="/home/rtk/"
-
+mkdir Downloads
+mv rtktop Downloads/
 
 
 echo "Installing packages with pacman"
@@ -110,6 +108,9 @@ for APP in "${FLATPAKS[@]}"; do
 done
 
 
+
+SRC_DIR="$HOME/Downloads/rtktop-main"
+DEST_DIR="/home/rtk/"
 
 
 mkdir -p "$DEST_DIR"
