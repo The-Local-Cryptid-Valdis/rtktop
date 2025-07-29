@@ -10,7 +10,7 @@ alias grep='grep --color=auto'
 PS1='[\u@\h \W]\$ '
 if [ -n "$DISPLAY" ] && command -v kitten &>/dev/null; then
     clear
-    ( kitten icat --place=728x408@-323x0 ~/Pictures/FaunaFetch.gif ) > /dev/tty
+    ( kitten icat --place=728x408@-323x0 ~/Pictures/Fauna/Gifs/FaunaFetch.gif ) > /dev/tty
 
     sleep 0.3
 fi
