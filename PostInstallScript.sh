@@ -2,12 +2,9 @@
 
 set -euo pipefail
 
-mkdir Downloads
-mv rtktop Downloads/
 
-
-echo "Installing packages with pacman"
-sudo pacman -Syu \
+echo "Installing packages"
+sudo pacman -Syu --noconfirm \
     bash-completion \
     grim \
     w3m \
@@ -109,8 +106,8 @@ done
 
 
 
-SRC_DIR="$HOME/Downloads/rtktop"
-DEST_DIR="/home/rtk/"
+SRC_DIR="$HOME/rtktop"
+DEST_DIR="$HOME"
 
 
 mkdir -p "$DEST_DIR"
@@ -122,5 +119,5 @@ echo "Copying Pictures..."
 rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
 
-echo "Shits done, You gotta run the which ever theme script to apply it"
+echo "Shits done, You gotta run the theme script"
 
