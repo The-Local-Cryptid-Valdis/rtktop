@@ -1,3 +1,4 @@
+
 {
     "layer": "top",
     "position": "top",
@@ -20,6 +21,8 @@
     "network",
     "tray"
     ],
+
+    "reload_style_on_change": true,
 
 
     "idle_inhibitor": {
@@ -45,7 +48,7 @@
     },
     "memory": {
         "interval": 5,
-        "format": "  {}%",
+        "format": "  {}%", 
         "on-click": "kitty --class floating -e 'btop'",
         "states": {
             "warning": 70,
@@ -56,7 +59,7 @@
     "network": {
         "interval": 5,
         "format-wifi": " ", 
-        "format-ethernet": " ",
+        "format-ethernet": " ", 
         "format-disconnected": "⚠  Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}",
         "on-click": "kitty --class floating -e 'nmtui'"
