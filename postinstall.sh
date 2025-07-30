@@ -250,6 +250,5 @@ rsync -a "$SRC_DIR/Documents" "$DEST_DIR"
 echo "Copying Pictures..."
 rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
-
-echo "Shits done, You gotta run the theme script"
-
+#call theme script before saying its done instead of running this then running the theme script just to start with a theme
+echo "Shits done"
