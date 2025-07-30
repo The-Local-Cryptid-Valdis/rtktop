@@ -3,57 +3,190 @@
 set -euo pipefail
 
 
-echo "Installing packages"
-sudo pacman -Syu --noconfirm \
-    bash-completion \
-    grim \
-    w3m \
-    imagemagick \
-    slurp \
-    pavucontrol \
-    btop \
-    unzip \
-    flatpak \
-    bubblewrap-suid \
-    uwsm \
-    waybar \
-    hyprpaper \
-    polkit \
-    polkit-kde-agent \
-    xdg-desktop-portal \
-    xdg-desktop-portal-gtk \
-    kitty \
-    ristretto \
-    mousepad \
-    thunar \
-    gvfs \
-    rsync \
-    gnome-disk-utility \
-    ttf-jetbrains-mono \
-    ttf-jetbrains-mono-nerd \
-    adobe-source-han-sans-jp-fonts \
-    adobe-source-han-serif-jp-fonts \
-    ttf-firacode-nerd \
-    ttf-font-awesome \
-    otf-font-awesome \
-    breeze \
-    breeze-gtk \
-    networkmanager \
-    network-manager-applet \
-    networkmanager-openvpn \
-    networkmanager-qt5 \
-    networkmanager-qt \
-    nm-connection-editor \
-    openresolv \
-    wireguard-tools \
-    firewalld \
-    qemu-desktop \
-    libvirt \
-    edk2-ovmf \
-    virt-manager \
-    dnsmasq \
-    mpv
 
+OS_ID=$(grep "^ID=" /etc/os-release | cut -d'=' -f2 | tr -d '"')
+
+
+declare -a ARCH_PACKAGES=(
+    bash-completion
+    grim
+    w3m
+    imagemagick
+    slurp
+    pavucontrol
+    btop
+    unzip
+    flatpak
+    bubblewrap-suid
+    uwsm
+    waybar
+    hyprpaper
+    polkit
+    polkit-kde-agent
+    xdg-desktop-portal
+    xdg-desktop-portal-gtk
+    kitty
+    ristretto
+    mousepad
+    thunar
+    gvfs
+    rsync
+    gnome-disk-utility
+    ttf-jetbrains-mono
+    ttf-jetbrains-mono-nerd
+    adobe-source-han-sans-jp-fonts
+    adobe-source-han-serif-jp-fonts
+    ttf-firacode-nerd
+    ttf-font-awesome
+    otf-font-awesome
+    breeze
+    breeze-gtk
+    networkmanager
+    network-manager-applet
+    networkmanager-openvpn
+    networkmanager-qt5
+    networkmanager-qt
+    nm-connection-editor
+    openresolv
+    wireguard-tools
+    firewalld
+    qemu-desktop
+    libvirt
+    edk2-ovmf
+    virt-manager
+    dnsmasq
+    mpv
+)
+
+declare -a FEDORA_PACKAGES=(
+    bash-completion
+    grim
+    w3m
+    imagemagick
+    slurp
+    pavucontrol
+    btop
+    unzip
+    flatpak
+    waybar
+    hyprpaper
+    hyprland
+    polkit
+    polkit-kde
+    xdg-desktop-portal
+    xdg-desktop-portal-gtk
+    kitty
+    ristretto
+    mousepad
+    thunar
+    gvfs
+    rsync
+    gnome-disk-utility
+    jetbrains-mono-fonts-all
+    adobe-source-han-sans-jp-fonts
+    adobe-source-han-serif-jp-fonts
+    fira-code-fonts
+    fontawesome-fonts-all
+    breeze-gtk
+    kf6-breeze-icons
+    networkmanager
+    networkmanager-tui
+    network-manager-applet
+    kf5-networkmanager-qt
+    kf6-networkmanager-qt
+    nm-connection-editor
+    openresolv
+    wireguard-tools
+    firewalld
+    qemu
+    qemu-kvm
+    libvirt
+    libvirt-client
+    edk2-ovmf
+    virt-manager
+    dnsmasq
+    mpv
+)
+
+declare -a UBUNTU_PACKAGES=(
+    bash-completion
+    grim
+    w3m
+    imagemagick
+    slurp
+    pavucontrol
+    btop
+    unzip
+    flatpak
+    waybar
+    hyprland
+    hyprpaper
+    polkit-kde-agent-1
+    polkitd
+    xdg-desktop-portal
+    xdg-desktop-portal-gtk
+    kitty
+    ristretto
+    mousepad
+    thunar
+    gvfs
+    rsync
+    gnome-disk-utility
+    fonts-jetbrains-mono
+    fonts-adobe-sourcesans3
+    fonts-vlgothic
+    fonts-firacode
+    fonts-font-awesome
+    breeze
+    breeze-gtk-theme
+    breeze-icon-theme
+    network-manager
+    network-manager-applet
+    network-manager-openvpn
+    libkf5networkmanagerqt6
+    libkf6networkmanagerqt6
+    nm-connection-editor
+    systemd-resolved
+    openvpn-systemd-resolved
+    wireguard-tools
+    firewalld
+    qemu-system-x86 
+    qemu-utils
+    libvirt-daemon-system
+    libvirt-clients
+    libvirt-daemon
+    libvirt-daemon-driver-qemu
+    virt-manager
+    dnsmasq
+    mpv
+)
+
+
+
+case "$OS_ID" in
+    arch)
+        echo "Detected Arch Linux"
+        sudo pacman -Syu --noconfirm "${ARCH_PACKAGES[@]}"
+        ;;
+    fedora)
+        echo "Detected Fedora"
+        sudo dnf install -y "${FEDORA_PACKAGES[@]}"
+        ;;
+    ubuntu)
+        echo "Detected Ubuntu"
+        sudo apt update
+        sudo apt install -y "${UBUNTU_PACKAGES[@]}"
+        ;;
+    mint)
+        echo "Detected Mint"
+        sudo apt update
+        sudo apt install -y "${UBUNTU_PACKAGES[@]}"
+        ;;
+    *)
+        echo "Unsupported distribution: $OS_ID"
+        exit 1
+        ;;
+esac
 
 
 
@@ -72,7 +205,6 @@ sudo systemctl preset firewalld.service
 echo "Setting firewalld default zone and allowed ports/services"
 sudo firewall-cmd --set-default-zone=drop
 
-# Adds http,https,dns and dhcp to allow list
 PORTS=(80/tcp 443/tcp 53/udp 67/udp 68/udp)
 for PORT in "${PORTS[@]}"; do
     echo "Adding port $PORT to drop zone"
