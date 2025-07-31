@@ -1,39 +1,39 @@
-https://gitlab.com/risingprismtv/single-gpu-passthrough/-/wikis/home
-https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF
-https://docs.vrchat.com/docs/using-vrchat-in-a-virtual-machine
+
+dmesg | grep -i "IOMMU: DETECTED" 
+
+efibootmgr -v | grep -Ei 'grub|ubuntu|systemd'
+
+lspci -nnk | grep -Ei 'VGA|Audio device'
+
+lscpu | grep -E 'AMD|INTEL'
+
+systemctl enable libvirtd
+systemctl start libvirtd
+sudo virsh net-autostart default
+sudo virsh net-start default
 
 
 
 
-dmesg | grep -i -e DMAR -e IOMMU
-
-
-
-
-#!/bin/bash
-shopt -s nullglob
-for g in $(find /sys/kernel/iommu_groups/* -maxdepth 0 -type d | sort -V); do
-    echo "IOMMU Group ${g##*/}:"
-    for d in $g/devices/*; do
-        echo -e "\t$(lspci -nns ${d##*/})"
-    done;
-done;
-
-
-                        SYSTEMD BOOT
-
+SYSTEMD BOOT
 sudo nano /boot/loader/entries/
 
-amd_iommu=on iommu=pt vfio-pci.ids=10de:2786,10de:22bc    (video=efifb:off (If amd card)) (SATA controller - 1022:43f6)
-
-
-
-                          GRUB
-
+GRUB 
 sudo nano /etc/default/grub
 
-amd_iommu=on iommu=pt vfio-pci.ids=10de:2786,10de:22bc    (video=efifb:off (If amd card)) (SATA controller - 1022:43f6)
 
+
+AMD cpu
+amd_iommu=on iommu=pt ??
+
+INTEL cpu
+intel_iommu=on 
+AMD gpu
+video=efifb:off
+
+
+
+GRUB
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
@@ -41,30 +41,14 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 
 sudo nano /etc/mkinitcpio.conf
-
-vfio_pci vfio vfio_iommu_type1      (add 'amdgpu' at end if using amd card)
+#add amdgpu at end if using amd card)
+vfio_pci vfio vfio_iommu_type1
 
 
 mkinitcpio -P
 
 
-
-
-(REBOOT NOW)
-
-
-
-
-sudo pacman -Syu qemu-desktop libvirt edk2-ovmf virt-manager dnsmasq
-
-
-
-(Run)
-
-systemctl enable libvirtd
-systemctl start libvirtd
-sudo virsh net-autostart default
-sudo virsh net-start default
+Reboot
 
 
 
