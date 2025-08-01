@@ -1,228 +1,110 @@
+#!/bin/bash
 
-echo "Checking for IOMMU detection..."
-dmesg | grep -i "IOMMU: DETECTED"
+set -e
 
-echo "Checking bootloader..."
-efibootmgr -v | grep -Ei 'grub|ubuntu|systemd'
+echo "Checking for IOMMU..."
+if dmesg | grep -qi "IOMMU: DETECTED"; then
+    echo "IOMMU is detected"
+else
+    echo "IOMMU is not enabled"
+    echo "Exiting script"
+    exit 1
+fi
 
-echo "Listing VGA and Audio devices..."
+
+echo "Detecting CPU..."
+CPU_VENDOR=$(lscpu | grep -Eo 'AMD|Intel' | head -1)
+echo "Detected $CPU_VENDOR"
+
+
+echo "Listing all VGA and Audio devices"
 lspci -nnk | grep -Ei 'VGA|Audio device'
-
-echo "Detecting CPU type..."
-lscpu | grep -Ei 'AMD|INTEL'
-
-echo "Enabling and starting libvirt service..."
-sudo systemctl enable libvirtd
-sudo systemctl start libvirtd
-
-echo "Starting and enabling default libvirt network..."
-sudo virsh net-autostart default
-sudo virsh net-start default
-
-
-
-SYSTEMD BOOT
-sudo nano /boot/loader/entries/
-
-GRUB 
-sudo nano /etc/default/grub
-
-
-
-AMD cpu
-amd_iommu=on iommu=pt ??
-
-INTEL cpu
-intel_iommu=on 
-AMD gpu
-video=efifb:off
-
-
-
-GRUB
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-
-
-
-
-sudo nano /etc/mkinitcpio.conf
-#add amdgpu at end if using amd card)
-vfio_pci vfio vfio_iommu_type1
-
-
-mkinitcpio -P
-
-
-#Reboot pc
-
-
-
-
-
-          REMOVE
-
-  <graphics type="spice" autoport="yes">
-    <listen type="address"/>
-    <gl enable="no"/>
-  </graphics>
-
-  <audio id="1" type="none"/>
-
-  <video>
-    <model type="bochs" vram="16384" heads="1" primary="yes"/>
-    <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
-  </video>
-
-  <channel type="spicevmc">
-    <target type="virtio" name="com.redhat.spice.0"/>
-    <address type="virtio-serial" controller="0" bus="0" port="1"/>
-  </channel>
-
-
-            
-
-
-
-       ANTI CHEAT BYPASS
-dmidecode --type bios
-dmidecode --type baseboard
-dmidecode --type system
-
-(May need to change info)
-
-  <sysinfo type="smbios">
-    <bios>
-      <entry name="vendor">American Megatrends International, LLC.</entry>
-      <entry name="version">1.60</entry>
-      <entry name="date">07/24/2024</entry>
-    </bios>
-    <system>
-      <entry name="manufacturer">Micro-Star International Co., Ltd.</entry>
-      <entry name="product">MS-7E24</entry>
-      <entry name="version">1.0</entry>
-      <entry name="serial">To be filled by O.E.M.</entry>
-      <entry name="uuid">cdf28472-f169-4c90-909f-72067631564f</entry>
-      <entry name="sku">To be filled by O.E.M.</entry>
-      <entry name="family">To be filled by O.E.M.</entry>
-    </system>
-  </sysinfo>
-
-
-<os>
-    <smbios mode="sysinfo"/>
-</os>
-
-
-
-
-  <acpi/>
-  <apic/>
-  <hyperv mode="custom">
-    <relaxed state="on"/>
-    <vapic state="on"/>
-    <spinlocks state="on" retries="8191"/>
-    <vpindex state="off"/>
-    <runtime state="off"/>
-    <synic state="off"/>
-    <stimer state="off"/>
-    <reset state="off"/>
-    <vendor_id state='on' value='0123756792CD'/>
-    <frequencies state="off"/>
-  </hyperv>
-
-
-<kvm>
-<hidden state='on'/>
-</kvm>
-
-
-
-  <cpu mode='host-passthrough' check='none'>
-    <topology sockets='1' dies='1' cores='8' threads='2'/>
-    <feature policy='require' name='topoext'/>
-  </cpu>
-
-
-
-
-
-
-
-
-  <devices>
-    <input type='evdev'>
-      <source dev='/dev/input/by-id/usb-Logitech_G502_HERO_Gaming_Mouse_156232523633-event-mouse'/>
-    </input>
-    <input type='evdev'>
-      <source dev='/dev/input/by-id/usb-Keychron_Keychron_C3_Pro-if02-event-kbd' grab='all' repeat='on' grabToggle='ctrl-ctrl'/>
-    </input>
-
-  </devices>
-
-
-Add (PCI 0000:11:00.0) USB Controller for Corsair_Corsair_HS80_RGB_USB_Gaming_Headset
-
-
-
-
-                                           (Looking glass setup)
-
-
-
-
-                                            (Build dependencies)
-
-  sudo pacman -Syu cmake gcc libgl libegl fontconfig spice-protocol make nettle pkgconf binutils \
-            libxi libxinerama libxss libxcursor libxpresent libxkbcommon wayland-protocols \
-            ttf-dejavu libsamplerate
-
-
-
-
-
-
-download the source code as a zip file, simply unzip and cd into the new directory.
-
-mkdir client/build
-cd client/build
-cmake ../
-make
-sudo make install
-
-
-
-sudo nano /etc/tmpfiles.d/10-looking-glass.conf
-
-
-# Type Path               Mode UID  GID Age Argument
-
-f /dev/shm/looking-glass 0660 roofkorean kvm -
-
-
-sudo chmod 666 /dev/shm/looking-glass
-
-
-
-<shmem name='looking-glass'>
-  <model type='ivshmem-plain'/>
-  <size unit='M'>32</size>
-</shmem>
-
-
-Add spice server
-
-Make display 'none'
-
-
-<sound model='ich9'>
-  <audio id='1'/>
-</sound>
-<audio id='1' type='spice'/>
-
-
-Install spice guest tools
-
-
-
-
+echo
+
+
+read -p "Enter the device IDs (e.g., 1002:15e7 1002:82a9 separated by spaces) you want to passthrough: " PASSTHROUGH_DEVICES
+
+
+if [[ -z "$PASSTHROUGH_DEVICES" ]]; then
+    echo "No devices selected for passthrough :("
+    exit 1
+else
+    echo "You have selected these devices for passthrough: $PASSTHROUGH_DEVICES"
+fi
+VFIO_ID="vfio-pci.ids=$PASSTHROUGH_DEVICES"
+
+
+echo "Configuring bootloader for IOMMU..."
+if [[ "$CPU_VENDOR" == "AMD" ]]; then
+    echo "AMD CPU found"
+    BOOT_PARAMS="amd_iommu=on iommu=pt video=efifb:off $VFIO_ID"
+elif [[ "$CPU_VENDOR" == "Intel" ]]; then
+    echo "Intel CPU found"
+    BOOT_PARAMS="intel_iommu=on iommu=pt $VFIO_ID"
+else
+    echo "Unsupported CPU $CPU_VENDOR"
+    exit 1
+fi
+
+
+if efibootmgr -v | grep -qi 'systemd'; then
+    echo "Configuring systemd-boot..."
+    LOADER_ENTRY_DIR="/boot/loader/entries/"
+    
+    DEFAULT_ENTRY=$(bootctl list | grep -E "^\*" | awk '{print $2}' | head -1)
+    if [[ -z "$DEFAULT_ENTRY" ]]; then
+        echo "Error couldnt find default loader entry"
+        exit 1
+    fi
+
+    LOADER_ENTRY_FILE="${LOADER_ENTRY_DIR}${DEFAULT_ENTRY}.conf"
+    
+    if [[ ! -f "$LOADER_ENTRY_FILE" ]]; then
+        echo "Error loader entry file ($LOADER_ENTRY_FILE) does not exist"
+        exit 1
+    fi
+
+    sudo cp "$LOADER_ENTRY_FILE" "${LOADER_ENTRY_FILE}.bak"
+
+    if grep -q "^options" "$LOADER_ENTRY_FILE"; then
+        EXISTING_PARAMS=$(grep "^options" "$LOADER_ENTRY_FILE" | sed 's/^options //')
+        for PARAM in $BOOT_PARAMS; do
+            if ! echo "$EXISTING_PARAMS" | grep -qw "$PARAM"; then
+                EXISTING_PARAMS="$EXISTING_PARAMS $PARAM"
+            fi
+        done
+        sudo sed -i "s/^options.*/options $EXISTING_PARAMS/" "$LOADER_ENTRY_FILE"
+    else
+        echo "options $BOOT_PARAMS" | sudo tee -a "$LOADER_ENTRY_FILE" > /dev/null
+    fi
+
+    echo "Systemd-boot config updated in $LOADER_ENTRY_FILE."
+else
+    echo "Configuring GRUB"
+    GRUB_CONFIG="/etc/default/grub"
+    if grep -q "^GRUB_CMDLINE_LINUX=" "$GRUB_CONFIG"; then
+        EXISTING_PARAMS=$(grep "^GRUB_CMDLINE_LINUX=" "$GRUB_CONFIG" | sed 's/^GRUB_CMDLINE_LINUX="//' | sed 's/"$//')
+        for PARAM in $BOOT_PARAMS; do
+            if ! echo "$EXISTING_PARAMS" | grep -qw "$PARAM"; then
+                EXISTING_PARAMS="$EXISTING_PARAMS $PARAM"
+            fi
+        done
+        sudo sed -i "s/^GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"$EXISTING_PARAMS\"/" "$GRUB_CONFIG"
+    else
+        echo "GRUB_CMDLINE_LINUX=\"$BOOT_PARAMS\"" | sudo tee -a "$GRUB_CONFIG" > /dev/null
+    fi
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
+
+
+echo "Configuring initramfs..."
+INITRD_CONFIG="/etc/mkinitcpio.conf"
+if grep -q "MODULES=" $INITRD_CONFIG; then
+    sudo sed -i 's/^MODULES=.*/MODULES=(vfio_pci vfio vfio_iommu_type1 amdgpu)/g' $INITRD_CONFIG
+else
+    echo 'MODULES=(vfio_pci vfio vfio_iommu_type1 amdgpu)' | sudo tee -a $INITRD_CONFIG > /dev/null
+fi
+sudo mkinitcpio -P
+
+
+echo "Shits done reboot playa"
