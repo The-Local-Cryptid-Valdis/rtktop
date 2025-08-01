@@ -1,17 +1,23 @@
 
-dmesg | grep -i "IOMMU: DETECTED" 
+echo "Checking for IOMMU detection..."
+dmesg | grep -i "IOMMU: DETECTED"
 
+echo "Checking bootloader..."
 efibootmgr -v | grep -Ei 'grub|ubuntu|systemd'
 
+echo "Listing VGA and Audio devices..."
 lspci -nnk | grep -Ei 'VGA|Audio device'
 
-lscpu | grep -E 'AMD|INTEL'
+echo "Detecting CPU type..."
+lscpu | grep -Ei 'AMD|INTEL'
 
-systemctl enable libvirtd
-systemctl start libvirtd
+echo "Enabling and starting libvirt service..."
+sudo systemctl enable libvirtd
+sudo systemctl start libvirtd
+
+echo "Starting and enabling default libvirt network..."
 sudo virsh net-autostart default
 sudo virsh net-start default
-
 
 
 
@@ -48,7 +54,7 @@ vfio_pci vfio vfio_iommu_type1
 mkinitcpio -P
 
 
-Reboot
+#Reboot pc
 
 
 
