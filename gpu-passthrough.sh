@@ -151,6 +151,14 @@ else
     exit 1
 fi
 
+echo "Enabling and starting libvirt service..."
+sudo systemctl enable libvirtd
+sudo systemctl start libvirtd
+
+echo "Starting and enabling default libvirt network..."
+sudo virsh net-autostart default
+sudo virsh net-start default
+
 
 echo "Shits done reboot playa"
 
