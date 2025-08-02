@@ -97,14 +97,60 @@ else
 fi
 
 
-echo "Configuring initramfs..."
-INITRD_CONFIG="/etc/mkinitcpio.conf"
-if grep -q "MODULES=" $INITRD_CONFIG; then
-    sudo sed -i 's/^MODULES=.*/MODULES=(vfio_pci vfio vfio_iommu_type1 amdgpu)/g' $INITRD_CONFIG
+
+echo "Configuring initramfs for VFIO passthrough..."
+
+VFIO_MODULES=("vfio_pci" "vfio" "vfio_iommu_type1")
+
+
+if command -v mkinitcpio &> /dev/null; then
+    echo "Detected mkinitcpio"
+    
+    INITRD_CONFIG="/etc/mkinitcpio.conf"
+    MODULE_LINE="MODULES=(${VFIO_MODULES[*]} amdgpu)"
+
+    if grep -q "^MODULES=" "$INITRD_CONFIG"; then
+        sudo sed -i "s/^MODULES=.*/$MODULE_LINE/" "$INITRD_CONFIG"
+    else
+        echo "$MODULE_LINE" | sudo tee -a "$INITRD_CONFIG" > /dev/null
+    fi
+
+    echo "Regenerating mkinitcpio"
+    sudo mkinitcpio -P
+
+elif command -v dracut &> /dev/null; then
+    echo "Detected dracut"
+
+    DRACUT_CONF="/etc/dracut.conf.d/10-vfio.conf"
+
+    {
+        echo "add_drivers+=\" ${VFIO_MODULES[*]} amdgpu \""
+        echo "force_drivers+=\" ${VFIO_MODULES[*]} amdgpu \""
+    } | sudo tee "$DRACUT_CONF" > /dev/null
+
+    echo "egenerating dracut"
+    sudo dracut -f
+
+elif command -v update-initramfs &> /dev/null; then
+    echo "Detected modprobe"
+
+    INITRD_MODULES="/etc/modprobe.d/vfio.conf"
+    MODPROBE_MODULES=("options vfio-pci ids=$PASSTHROUGH_DEVICES")
+    
+    for mod in "${MODPROBE_MODULES[@]}" "amdgpu"; do
+        if ! grep -Fxq "$mod" "$INITRD_MODULES"; then
+            echo "$mod" | sudo tee -a "$INITRD_MODULES" > /dev/null
+        fi
+    done
+
+    echo "Regenerating initramfs"
+    sudo update-initramfs -u -k all
+
 else
-    echo 'MODULES=(vfio_pci vfio vfio_iommu_type1 amdgpu)' | sudo tee -a $INITRD_CONFIG > /dev/null
+    echo "Could not detect supported initramfs tool (mkinitcpio, dracut, initramfs-tools)"
+    exit 1
 fi
-sudo mkinitcpio -P
 
 
 echo "Shits done reboot playa"
+
