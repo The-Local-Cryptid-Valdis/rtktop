@@ -49,7 +49,7 @@ fi
 
 echo "Restarting services..."
 killall waybar 2>/dev/null && waybar &
-hyperpaper --config "$CONFIG_DIR/hypr/hyprpaper.conf" &
+hyprpaper --config "$CONFIG_DIR/hypr/hyprpaper.conf" &
 sddm --reconfigure 2>/dev/null
 
 echo "Rice '$RICE_NAME' applied successfully!"

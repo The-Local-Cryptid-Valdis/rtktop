@@ -56,6 +56,7 @@ declare -a ARCH_PACKAGES=(
     virt-manager
     dnsmasq
     mpv
+    fastfetch
 )
 
 declare -a FEDORA_PACKAGES=(
@@ -106,6 +107,7 @@ declare -a FEDORA_PACKAGES=(
     virt-manager
     dnsmasq
     mpv
+    fastfetch
 )
 
 declare -a UBUNTU_PACKAGES=(
@@ -229,7 +231,6 @@ FLATPAKS=(
   "dev.vencord.Vesktop"
   "com.vscodium.codium"
   "org.gimp.GIMP"
-  "org.kde.kget"
 )
 
 for APP in "${FLATPAKS[@]}"; do
