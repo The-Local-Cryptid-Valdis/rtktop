@@ -2,7 +2,7 @@
 
 RICE_DIR="$HOME/Documents/Rices"
 CONFIG_DIR="$HOME/.config"
-COMPONENTS=("waybar" "sddm" "hypr" "fastfetch")
+COMPONENTS=("waybar" "sddm.conf.d" "hypr" "fastfetch")
 BASHRC_FILE="$HOME/.bashrc"
 
 if [ -z "$1" ]; then

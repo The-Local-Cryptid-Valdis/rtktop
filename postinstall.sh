@@ -231,6 +231,7 @@ FLATPAKS=(
   "dev.vencord.Vesktop"
   "com.vscodium.codium"
   "org.gimp.GIMP"
+  "org.kde.kget"
 )
 
 for APP in "${FLATPAKS[@]}"; do
