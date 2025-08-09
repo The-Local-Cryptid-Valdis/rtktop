@@ -12,11 +12,10 @@ if [ -n "$DISPLAY" ] && command -v kitten &>/dev/null; then
     clear
     ( kitten icat --place=728x408@-323x0 ~/Pictures/Fauna/Gifs/FaunaFetch.gif ) > /dev/tty
 
-    sleep 0.3
+    sleep 0.4
 fi
 
 fastfetch
 
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
     . /usr/share/bash-completion/bash_completion
-

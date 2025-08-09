@@ -104,36 +104,6 @@
         "format": "{$1}{pretty-name}  {#2}[v{version}] [PID:{pid}]"
       },
       {
-        "type": "localip",
-        "key": "{#90}│ {#94}Local IPv4  {#90}│",
-        "showPrefixLen": true,
-        "showIpv4": true,
-        "showIpv6": false,
-        "showMtu": true,
-        "format": "{$1}{ifname}: {ipv4}  {#2}[MTU:{mtu}]"
-      },
-      {
-        "type": "localip",
-        "key": "{#90}│ {#94}Local IPv6  {#90}│",
-        "showPrefixLen": true,
-        "showIpv4": false,
-        "showIpv6": true,
-        "showMtu": true,
-        "format": "{$1}{ifname}: {ipv6}  {#2}[MTU:{mtu}]"
-      },
-      {
-        "type": "publicip",
-        "key": "{#90}│ {#94}Public IPv4 {#90}│",
-        "ipv6": false,
-        "format": "{$1}{ip}  {#2}[{location}]"
-      },
-      {
-        "type": "publicip",
-        "key": "{#90}│ {#94}Public IPv6 {#90}│",
-        "ipv6": true,
-        "format": "{$1}{ip}  {#2}[{location}]"
-      },
-      {
         "type": "custom",
         "key": "{#90}╰─────────────╯",
         "format": "{#90}╰────────────────────────────────────────────────────────────╯"

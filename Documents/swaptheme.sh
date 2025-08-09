@@ -2,7 +2,7 @@
 
 RICE_DIR="$HOME/Documents/Rices"
 CONFIG_DIR="$HOME/.config"
-COMPONENTS=("waybar" "sddm.conf.d" "hypr" "fastfetch")
+COMPONENTS=("waybar" "hypr" "sddm" "fastfetch")
 BASHRC_FILE="$HOME/.bashrc"
 
 if [ -z "$1" ]; then
@@ -29,12 +29,13 @@ for COMPONENT in "${COMPONENTS[@]}"; do
     TARGET_COMPONENT="$TARGET_RICE/$COMPONENT"
     CONFIG_COMPONENT="$CONFIG_DIR/$COMPONENT"
 
-    if [ -d "$TARGET_COMPONENT" ]; then
-        echo "Updating $COMPONENT..."
-        ln -sf "$TARGET_COMPONENT" "$CONFIG_COMPONENT"
-    else
-        echo "Warning: $COMPONENT not found in $TARGET_RICE, skipping..."
+    echo "Updating $COMPONENT"
+
+    if [ -e "$CONFIG_COMPONENT" ] || [ -L "$CONFIG_COMPONENT" ]; then
+        rm -rf "$CONFIG_COMPONENT"
     fi
+
+    ln -s "$TARGET_COMPONENT" "$CONFIG_COMPONENT"
 done
 
 
@@ -44,12 +45,19 @@ if [ -f "$TARGET_BASHRC" ]; then
     cp "$TARGET_BASHRC" "$BASHRC_FILE"
     source "$BASHRC_FILE"
 else
-    echo "Warning: No .bashrc file found in $TARGET_RICE, skipping..."
+    echo "Warning: No .bashrc file found in $TARGET_RICE, skipping"
 fi
 
-echo "Restarting services..."
-killall waybar 2>/dev/null && waybar &
-hyprpaper --config "$CONFIG_DIR/hypr/hyprpaper.conf" &
-sddm --reconfigure 2>/dev/null
+echo "Restarting services"
+
+
+killall waybar >/dev/null 2>&1 && nohup waybar >/dev/null 2>&1 &
+
+killall hyprpaper >/dev/null 2>&1 && nohup hyprpaper >/dev/null 2>&1 &
+
 
 echo "Rice '$RICE_NAME' applied successfully!"
+
+
+
+
