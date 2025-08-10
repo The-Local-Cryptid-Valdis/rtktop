@@ -4,4 +4,9 @@ Run  `git clone https://github.com/The-Local-Cryptid-Valdis/rtktop.git`
 
 Then run the Post Install Script
 
-`./rtktop/postinstall.sh `
+`./rtktop/postinstall.sh`
+
+
+For swapping themes  `swaptheme`
+
+For GPU passthrough  `passgpu`
