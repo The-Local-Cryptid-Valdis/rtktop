@@ -7,6 +7,6 @@ Then run the Post Install Script
 `./rtktop/postinstall.sh`
 
 
-For swapping themes  `swaptheme`
+For swapping themes run `swaptheme`
 
-For GPU passthrough  `passgpu`
+For GPU passthrough run `passgpu`
