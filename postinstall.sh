@@ -110,59 +110,6 @@ declare -a FEDORA_PACKAGES=(
     fastfetch
 )
 
-declare -a UBUNTU_PACKAGES=(
-    bash-completion
-    grim
-    w3m
-    imagemagick
-    slurp
-    pavucontrol
-    btop
-    unzip
-    flatpak
-    waybar
-    hyprland
-    hyprpaper
-    polkit-kde-agent-1
-    polkitd
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
-    kitty
-    ristretto
-    mousepad
-    thunar
-    gvfs
-    rsync
-    gnome-disk-utility
-    fonts-jetbrains-mono
-    fonts-adobe-sourcesans3
-    fonts-vlgothic
-    fonts-firacode
-    fonts-font-awesome
-    breeze
-    breeze-gtk-theme
-    breeze-icon-theme
-    network-manager
-    network-manager-applet
-    network-manager-openvpn
-    libkf5networkmanagerqt6
-    libkf6networkmanagerqt6
-    nm-connection-editor
-    systemd-resolved
-    openvpn-systemd-resolved
-    wireguard-tools
-    firewalld
-    qemu-system-x86 
-    qemu-utils
-    libvirt-daemon-system
-    libvirt-clients
-    libvirt-daemon
-    libvirt-daemon-driver-qemu
-    virt-manager
-    dnsmasq
-    mpv
-)
-
 
 
 case "$OS_ID" in
@@ -173,16 +120,6 @@ case "$OS_ID" in
     fedora)
         echo "Detected Fedora"
         sudo dnf install -y "${FEDORA_PACKAGES[@]}"
-        ;;
-    ubuntu)
-        echo "Detected Ubuntu"
-        sudo apt update
-        sudo apt install -y "${UBUNTU_PACKAGES[@]}"
-        ;;
-    mint)
-        echo "Detected Mint"
-        sudo apt update
-        sudo apt install -y "${UBUNTU_PACKAGES[@]}"
         ;;
     *)
         echo "Unsupported distribution: $OS_ID"
