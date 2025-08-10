@@ -2,7 +2,7 @@
 
 RICE_DIR="$HOME/Documents/Rices"
 CONFIG_DIR="$HOME/.config"
-COMPONENTS=("waybar" "hypr" "sddm" "fastfetch")
+COMPONENTS=("waybar" "hypr" "fastfetch")
 BASHRC_FILE="$HOME/.bashrc"
 
 if [ -z "$1" ]; then
@@ -48,13 +48,14 @@ else
     echo "Warning: No .bashrc file found in $TARGET_RICE, skipping"
 fi
 
+
+sed -i "s/^current=.*/current=$RICE_NAME/" /usr/lib/sddm/sddm.conf.d/default.conf
+
+
 echo "Restarting services"
 
-
 killall waybar >/dev/null 2>&1 && nohup waybar >/dev/null 2>&1 &
-
 killall hyprpaper >/dev/null 2>&1 && nohup hyprpaper >/dev/null 2>&1 &
-
 
 echo "Rice '$RICE_NAME' applied successfully!"
 

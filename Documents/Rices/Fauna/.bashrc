@@ -7,7 +7,11 @@
 
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+alias swaptheme='bash ~/Documents/Rices/swaptheme.sh'
+alias passgpu='bash ./rtktop/gpu-passthrough.sh'
+
 PS1='[\u@\h \W]\$ '
+
 if [ -n "$DISPLAY" ] && command -v kitten &>/dev/null; then
     clear
     ( kitten icat --place=728x408@-323x0 ~/Pictures/Fauna/Gifs/FaunaFetch.gif ) > /dev/tty

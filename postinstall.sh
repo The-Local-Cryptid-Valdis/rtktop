@@ -247,13 +247,11 @@ DEST_DIR="$HOME"
 
 mkdir -p "$DEST_DIR"
 
-echo "Copying Documents..."
 rsync -a "$SRC_DIR/Documents" "$DEST_DIR"
 
-echo "Copying Pictures..."
 rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
-cp "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d"
+cp -f "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d"
 
 
 #call theme script before saying its done instead of running this then running the theme script just to start with a theme
