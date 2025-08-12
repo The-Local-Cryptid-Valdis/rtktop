@@ -10,11 +10,11 @@ alias grep='grep --color=auto'
 alias swaptheme='bash ~/Documents/Rices/swaptheme.sh'
 alias passgpu='bash ./rtktop/gpu-passthrough.sh'
 
-PS1='\[\e[0;32m\]\u\[\e[0m\]\[\e[0;33m\]♡\[\e[0m\]\[\e[0;32m\]\h\[\e[0m\]:\w\$ '
+PS1='\[\e[38;5;205m\]\u\[\e[0m\]\[\e[38;5;10m\]♡\[\e[0m\]\[\e[38;5;226m\]\h\[\e[0m\]:\w\$ '
 
 if [ -n "$DISPLAY" ] && command -v kitten &>/dev/null; then
     clear
-    ( kitten icat --place=728x408@-323x0 ~/Pictures/Fauna/Gifs/FaunaFetch.gif ) > /dev/tty
+    ( kitten icat --place=728x408@-323x0 ~/Pictures/Towa/Gifs/TowaFetch.gif ) > /dev/tty
 
     sleep 0.4
 fi
