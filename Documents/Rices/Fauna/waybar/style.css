@@ -1,10 +1,3 @@
-
-
-/* -----------------------------------------------------------------------------
- * Base styles
- * -------------------------------------------------------------------------- */
-
-/* Reset all styles */
 * {
     border: 0;
     border-radius: 0;
@@ -15,16 +8,13 @@
 }
 
 
-/* The whole bar */
 window#waybar {
-    /* color: #dfdfdf; */
     background-color: rgba(0,0,0,0);
     font-family: JetBrains Mono Nerd Font;
     font-size: 14px;
     color: #008000;
 }
 
-/* Every modules */
 #battery,
 #clock,
 #backlight,
@@ -43,12 +33,8 @@ window#waybar {
 #workspaces,
 
 
-/* -----------------------------------------------------------------------------
- * Modules styles
- * -------------------------------------------------------------------------- */
 
 #clock {
-    /* color: #ff4499; */
     color: #008000;
     font-size:14px;
     background-color: rgba(0,0,0,0.8);
@@ -75,8 +61,6 @@ window#waybar {
 }
 
 #mode {
-    /* background: @highlight; */
-    /* background: #dfdfdf; */
     color:#ff4499;
     font-size:14px;
     background-color: rgba(0,0,0,0.8);
@@ -103,10 +87,10 @@ window#waybar {
 }
 
 button:hover {
-  box-shadow: none; /* Remove predefined box-shadow */
-  text-shadow: none; /* Remove predefined text-shadow */
-  background: none; /* Remove predefined background color (white) */
-  transition: none; /* Disable predefined animations */
+  box-shadow: none;
+  text-shadow: none;
+  background: none; 
+  transition: none;
 }
 
 #workspaces button.active {

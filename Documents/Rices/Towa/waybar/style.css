@@ -1,10 +1,4 @@
 
-
-/* -----------------------------------------------------------------------------
- * Base styles
- * -------------------------------------------------------------------------- */
-
-/* Reset all styles */
 * {
     border: 0;
     border-radius: 0;
@@ -15,15 +9,14 @@
 }
 
 
-/* The whole bar */
+
 window#waybar {
-    /* color: #dfdfdf; */
     background-color: rgba(0,0,0,0);
     font-family: JetBrains Mono Nerd Font;
     font-size: 14px;
 }
 
-/* Every modules */
+
 #battery,
 #clock,
 #backlight,
@@ -41,13 +34,7 @@ window#waybar {
 #custom-power,
 #workspaces,
 
-
-/* -----------------------------------------------------------------------------
- * Modules styles
- * -------------------------------------------------------------------------- */
-
 #clock {
-    /* color: #ff4499; */
     color: #9d129c;
     font-size:14px;
     background-color: rgba(0,0,0,0.8);
@@ -122,8 +109,6 @@ window#waybar {
 }
 
 #mode {
-    /* background: @highlight; */
-    /* background: #dfdfdf; */
     color:#ff4499;
     font-size:14px;
     background-color: rgba(0,0,0,0.8);
