@@ -11,6 +11,7 @@ declare -a ARCH_PACKAGES=(
     bash-completion
     grim
     w3m
+    steam
     imagemagick
     slurp
     pavucontrol
@@ -192,7 +193,7 @@ sudo cp -f "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d"
 
 echo alias passgpu='bash ./rtktop/gpu-passthrough.sh' >> .bashrc
 
-echo alias swaptheme='bash ~/Documents/Rices/swaptheme.sh' >> .bashrc
+echo alias swaptheme='bash ~/Documents/swaptheme.sh' >> .bashrc
 
 #call theme script before saying its done instead of running this then running the theme script just to start with a theme
 echo "Shits done"
