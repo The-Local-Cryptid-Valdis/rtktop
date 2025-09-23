@@ -56,8 +56,9 @@ echo "Restarting services"
 
 killall waybar >/dev/null 2>&1 && nohup waybar >/dev/null 2>&1 &
 killall hyprpaper >/dev/null 2>&1 && nohup hyprpaper >/dev/null 2>&1 &
+hyprctl reload
 
-echo "Rice '$RICE_NAME' applied successfully!"
+echo "Rice '$RICE_NAME' applied successfully!. May need to logout and login again for some changes"
 
 
 
