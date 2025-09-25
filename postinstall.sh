@@ -12,6 +12,8 @@ declare -a ARCH_PACKAGES=(
     grim
     w3m
     steam
+    flameshot
+    wl-clipboard
     imagemagick
     slurp
     pavucontrol
@@ -60,6 +62,8 @@ declare -a ARCH_PACKAGES=(
     fastfetch
 )
 
+
+#Steam/Flameshot and clipboard missing
 declare -a FEDORA_PACKAGES=(
     bash-completion
     grim
