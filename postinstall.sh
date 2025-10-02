@@ -193,7 +193,7 @@ rsync -a "$SRC_DIR/Documents" "$DEST_DIR"
 
 rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
-sudo cp -f "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d"
+sudo cp "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d"
 
 echo alias passgpu='bash ./rtktop/gpu-passthrough.sh' >> .bashrc
 
