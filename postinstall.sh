@@ -136,8 +136,6 @@ rsync -a "$SRC_DIR/Documents" "$DEST_DIR"
 
 rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
-sudo cp "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d"
-
 echo alias passgpu='bash ~./rtktop/gpu-passthrough.sh' >> .bashrc
 
 echo alias swaptheme='bash ~/rtktop/Documents/swaptheme.sh' >> .bashrc
