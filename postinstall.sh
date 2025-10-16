@@ -63,68 +63,11 @@ declare -a ARCH_PACKAGES=(
 )
 
 
-#Steam/Flameshot and clipboard missing
-declare -a FEDORA_PACKAGES=(
-    bash-completion
-    grim
-    w3m
-    imagemagick
-    slurp
-    pavucontrol
-    btop
-    unzip
-    flatpak
-    waybar
-    hyprpaper
-    hyprland
-    polkit
-    polkit-kde
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
-    kitty
-    ristretto
-    mousepad
-    thunar
-    gvfs
-    rsync
-    gnome-disk-utility
-    jetbrains-mono-fonts-all
-    adobe-source-han-sans-jp-fonts
-    adobe-source-han-serif-jp-fonts
-    fira-code-fonts
-    fontawesome-fonts-all
-    breeze-gtk
-    kf6-breeze-icons
-    networkmanager
-    networkmanager-tui
-    network-manager-applet
-    kf5-networkmanager-qt
-    kf6-networkmanager-qt
-    nm-connection-editor
-    openresolv
-    wireguard-tools
-    firewalld
-    qemu
-    qemu-kvm
-    libvirt
-    libvirt-client
-    edk2-ovmf
-    virt-manager
-    dnsmasq
-    mpv
-    fastfetch
-)
-
-
 
 case "$OS_ID" in
     arch)
         echo "Detected Arch Linux"
         sudo pacman -Syu --noconfirm "${ARCH_PACKAGES[@]}"
-        ;;
-    fedora)
-        echo "Detected Fedora"
-        sudo dnf install -y "${FEDORA_PACKAGES[@]}"
         ;;
     *)
         echo "Unsupported distribution: $OS_ID"
@@ -195,9 +138,9 @@ rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
 sudo cp "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d"
 
-echo alias passgpu='bash ./rtktop/gpu-passthrough.sh' >> .bashrc
+echo alias passgpu='bash ~./rtktop/gpu-passthrough.sh' >> .bashrc
 
-echo alias swaptheme='bash ~/Documents/swaptheme.sh' >> .bashrc
+echo alias swaptheme='bash ~/rtktop/Documents/swaptheme.sh' >> .bashrc
 
 #call theme script before saying its done instead of running this then running the theme script just to start with a theme
 echo "Shits done"

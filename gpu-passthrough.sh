@@ -2,16 +2,6 @@
 
 set -e
 
-echo "Checking for IOMMU..."
-if dmesg | grep -qi "IOMMU: DETECTED"; then
-    echo "IOMMU is detected"
-else
-    echo "IOMMU is not enabled"
-    echo "Exiting script"
-    exit 1
-fi
-
-
 echo "Detecting CPU..."
 CPU_VENDOR=$(lscpu | grep -Eo 'AMD|Intel' | head -1)
 echo "Detected $CPU_VENDOR"
@@ -22,7 +12,7 @@ lspci -nnk | grep -Ei 'VGA|Audio device'
 echo
 
 
-read -p "Enter the device IDs (e.g., 1002:15e7 1002:82a9 separated by spaces) you want to passthrough: " PASSTHROUGH_DEVICES
+read -p "Enter the device IDs (e.g 1002:15e7 1002:82a9 separated by spaces) you want to passthrough: " PASSTHROUGH_DEVICES
 
 
 if [[ -z "$PASSTHROUGH_DEVICES" ]]; then
@@ -47,24 +37,30 @@ else
 fi
 
 
+echo "Configuring bootloader for GPU passthrough"
 if efibootmgr -v | grep -qi 'systemd'; then
-    echo "Configuring systemd-boot..."
     LOADER_ENTRY_DIR="/boot/loader/entries/"
     
-    DEFAULT_ENTRY=$(bootctl list | grep -E "^\*" | awk '{print $2}' | head -1)
-    if [[ -z "$DEFAULT_ENTRY" ]]; then
-        echo "Error couldnt find default loader entry"
-        exit 1
-    fi
 
-    LOADER_ENTRY_FILE="${LOADER_ENTRY_DIR}${DEFAULT_ENTRY}.conf"
+    echo "Available loader entries:"
+    ls -1 "$LOADER_ENTRY_DIR"
+ echo
     
-    if [[ ! -f "$LOADER_ENTRY_FILE" ]]; then
-        echo "Error loader entry file ($LOADER_ENTRY_FILE) does not exist"
+    read -p "Enter the name of the loader entry you want to modify (without .conf): " SELECTED_ENTRY
+    
+    LOADER_ENTRY_FILE="${LOADER_ENTRY_DIR}${SELECTED_ENTRY}.conf"
+
+    
+    echo "You selected: $LOADER_ENTRY_FILE"
+    echo "Current content:"
+    cat "$LOADER_ENTRY_FILE"
+    echo
+    
+    read -p "Do you want to proceed with modifying this file? (y/n): " CONFIRM
+    if [[ "$CONFIRM" != "y" ]]; then
+        echo "Operation cancelled by user"
         exit 1
     fi
-
-    sudo cp "$LOADER_ENTRY_FILE" "${LOADER_ENTRY_FILE}.bak"
 
     if grep -q "^options" "$LOADER_ENTRY_FILE"; then
         EXISTING_PARAMS=$(grep "^options" "$LOADER_ENTRY_FILE" | sed 's/^options //')
@@ -78,24 +74,9 @@ if efibootmgr -v | grep -qi 'systemd'; then
         echo "options $BOOT_PARAMS" | sudo tee -a "$LOADER_ENTRY_FILE" > /dev/null
     fi
 
-    echo "Systemd-boot config updated in $LOADER_ENTRY_FILE."
-else
-    echo "Configuring GRUB"
-    GRUB_CONFIG="/etc/default/grub"
-    if grep -q "^GRUB_CMDLINE_LINUX=" "$GRUB_CONFIG"; then
-        EXISTING_PARAMS=$(grep "^GRUB_CMDLINE_LINUX=" "$GRUB_CONFIG" | sed 's/^GRUB_CMDLINE_LINUX="//' | sed 's/"$//')
-        for PARAM in $BOOT_PARAMS; do
-            if ! echo "$EXISTING_PARAMS" | grep -qw "$PARAM"; then
-                EXISTING_PARAMS="$EXISTING_PARAMS $PARAM"
-            fi
-        done
-        sudo sed -i "s/^GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"$EXISTING_PARAMS\"/" "$GRUB_CONFIG"
-    else
-        echo "GRUB_CMDLINE_LINUX=\"$BOOT_PARAMS\"" | sudo tee -a "$GRUB_CONFIG" > /dev/null
-    fi
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
-fi
-
+    echo "Systemd-boot config updated in $LOADER_ENTRY_FILE"
+    echo "New content:"
+    cat "$LOADER_ENTRY_FILE"
 
 
 echo "Configuring initramfs for VFIO passthrough..."
@@ -118,38 +99,7 @@ if command -v mkinitcpio &> /dev/null; then
     echo "Regenerating mkinitcpio"
     sudo mkinitcpio -P
 
-elif command -v dracut &> /dev/null; then
-    echo "Detected dracut"
 
-    DRACUT_CONF="/etc/dracut.conf.d/10-vfio.conf"
-
-    {
-        echo "add_drivers+=\" ${VFIO_MODULES[*]} amdgpu \""
-        echo "force_drivers+=\" ${VFIO_MODULES[*]} amdgpu \""
-    } | sudo tee "$DRACUT_CONF" > /dev/null
-
-    echo "egenerating dracut"
-    sudo dracut -f
-
-elif command -v update-initramfs &> /dev/null; then
-    echo "Detected modprobe"
-
-    INITRD_MODULES="/etc/modprobe.d/vfio.conf"
-    MODPROBE_MODULES=("options vfio-pci ids=$PASSTHROUGH_DEVICES")
-    
-    for mod in "${MODPROBE_MODULES[@]}" "amdgpu"; do
-        if ! grep -Fxq "$mod" "$INITRD_MODULES"; then
-            echo "$mod" | sudo tee -a "$INITRD_MODULES" > /dev/null
-        fi
-    done
-
-    echo "Regenerating initramfs"
-    sudo update-initramfs -u -k all
-
-else
-    echo "Could not detect supported initramfs tool (mkinitcpio, dracut, initramfs-tools)"
-    exit 1
-fi
 
 echo "Enabling and starting libvirt service..."
 sudo systemctl enable libvirtd
