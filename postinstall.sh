@@ -70,47 +70,22 @@ case "$OS_ID" in
         sudo pacman -Syu --noconfirm "${ARCH_PACKAGES[@]}"
         ;;
     *)
-        echo "Unsupported distribution: $OS_ID"
+        echo "Unsupported distro $OS_ID"
         exit 1
         ;;
 esac
 
 
+sudo systemctl enable firewalld.service
+sudo systemctl start firewalld.service
 
-echo "Enabling and starting firewalld"
-sudo systemctl enable --now firewalld.service
-
-PRESET_FILE="/usr/lib/systemd/system-preset/90-systemd.preset"
-if ! grep -q "^enable firewalld.service" "$PRESET_FILE"; then
-    echo "Adding firewalld to system preset"
-    echo "enable firewalld.service" | sudo tee -a "$PRESET_FILE"
-fi
-
-echo "Applying firewalld preset"
-sudo systemctl preset firewalld.service
-
-echo "Setting firewalld default zone and allowed ports/services"
 sudo firewall-cmd --set-default-zone=drop
-
-PORTS=(80/tcp 443/tcp 53/udp 67/udp 68/udp)
-for PORT in "${PORTS[@]}"; do
-    echo "Adding port $PORT to drop zone"
-    sudo firewall-cmd --zone=drop --add-port=$PORT --permanent
-done
-
-sudo firewall-cmd --runtime-to-permanent
 sudo firewall-cmd --reload
 
 
-
-
-echo "Locking root account"
 sudo passwd -l root
 
 
-
-
-echo "Installing Flatpak apps"
 FLATPAKS=(
   "io.gitlab.librewolf-community"
   "dev.vencord.Vesktop"
@@ -135,6 +110,9 @@ mkdir -p "$DEST_DIR"
 rsync -a "$SRC_DIR/Documents" "$DEST_DIR"
 
 rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
+
+sudo cp "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d/"
+sudo cp "/Documents/sddm-themes/*/" "/usr/share/sddm/themes/" 
 
 echo alias passgpu='bash ~./rtktop/gpu-passthrough.sh' >> .bashrc
 
