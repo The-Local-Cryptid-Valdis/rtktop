@@ -49,7 +49,7 @@ else
 fi
 
 
-sed -i "s/^current=.*/current=$RICE_NAME/" /usr/lib/sddm/sddm.conf.d/default.conf
+sudo sed -i "s/^current=.*/current=$RICE_NAME/" /etc/sddm.conf.d/sddm.conf
 
 
 echo "Restarting services"
@@ -59,7 +59,3 @@ killall hyprpaper >/dev/null 2>&1 && nohup hyprpaper >/dev/null 2>&1 &
 hyprctl reload
 
 echo "Rice '$RICE_NAME' applied successfully!. May need to logout and login again for some changes"
-
-
-
-

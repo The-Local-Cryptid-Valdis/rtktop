@@ -113,9 +113,10 @@ rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
 
 sudo cp "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d/"
 sudo cp "/Documents/sddm-themes/*/" "/usr/share/sddm/themes/" 
+sudo mkdir /etc/sddm.conf.d/
+sudo cp "$SRC_DIR/sddm.conf" "/etc/sddm.conf.d/" 
 
 echo alias passgpu='bash ~./rtktop/gpu-passthrough.sh' >> .bashrc
-
 echo alias swaptheme='bash ~/rtktop/Documents/swaptheme.sh' >> .bashrc
 
 #call theme script before saying its done instead of running this then running the theme script just to start with a theme
