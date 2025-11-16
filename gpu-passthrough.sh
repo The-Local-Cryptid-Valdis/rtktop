@@ -37,10 +37,8 @@ else
 fi
 
 
-echo "Configuring bootloader for GPU passthrough"
-if efibootmgr -v | grep -qi 'systemd'; then
-    LOADER_ENTRY_DIR="/boot/loader/entries/"
-    
+
+LOADER_ENTRY_DIR="/boot/loader/entries/"
 
     echo "Available loader entries:"
     ls -1 "$LOADER_ENTRY_DIR"
@@ -85,8 +83,7 @@ VFIO_MODULES=("vfio_pci" "vfio" "vfio_iommu_type1")
 
 
 if command -v mkinitcpio &> /dev/null; then
-    echo "Detected mkinitcpio"
-    
+        
     INITRD_CONFIG="/etc/mkinitcpio.conf"
     MODULE_LINE="MODULES=(${VFIO_MODULES[*]} amdgpu)"
 
@@ -96,7 +93,6 @@ if command -v mkinitcpio &> /dev/null; then
         echo "$MODULE_LINE" | sudo tee -a "$INITRD_CONFIG" > /dev/null
     fi
 
-    echo "Regenerating mkinitcpio"
     sudo mkinitcpio -P
 
 
