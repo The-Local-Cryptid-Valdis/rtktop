@@ -19,8 +19,8 @@ declare -a ARCH_PACKAGES=(
     pavucontrol
     btop
     unzip
-    flatpak
     bubblewrap-suid
+    flatpak
     uwsm
     waybar
     hyprpaper
@@ -67,7 +67,7 @@ declare -a ARCH_PACKAGES=(
 case "$OS_ID" in
     arch)
         echo "Detected Arch Linux"
-        sudo pacman -Syu --noconfirm "${ARCH_PACKAGES[@]}"
+        sudo pacman -Syu "${ARCH_PACKAGES[@]}"
         ;;
     *)
         echo "Unsupported distro $OS_ID"
