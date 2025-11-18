@@ -7,7 +7,7 @@ set -euo pipefail
 OS_ID=$(grep "^ID=" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 
 
-declare -a ARCH_PACKAGES=(
+declare -a PACKAGES=(
     bash-completion
     grim
     w3m
@@ -67,7 +67,7 @@ declare -a ARCH_PACKAGES=(
 case "$OS_ID" in
     arch)
         echo "Detected Arch Linux"
-        sudo pacman -Syu "${ARCH_PACKAGES[@]}"
+        sudo pacman -Syu "${PACKAGES[@]}"
         ;;
     *)
         echo "Unsupported distro $OS_ID"
