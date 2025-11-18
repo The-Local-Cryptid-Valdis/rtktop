@@ -105,6 +105,7 @@ sudo pacman -Rs dolphin firefox
 echo alias passgpu='bash ~./rtktop/gpu-passthrough.sh' >> .bashrc
 echo alias swaptheme='bash ~/rtktop/Documents/swaptheme.sh' >> .bashrc
 
+#Calls theme script
 ./Documents/swaptheme.sh
 
 echo "Shits done, Run "swaptheme" to apply themes"
