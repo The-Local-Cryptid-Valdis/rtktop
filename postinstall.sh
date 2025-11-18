@@ -4,9 +4,6 @@ set -euo pipefail
 
 
 
-OS_ID=$(grep "^ID=" /etc/os-release | cut -d'=' -f2 | tr -d '"')
-
-
 declare -a PACKAGES=(
     bash-completion
     grim
@@ -63,17 +60,8 @@ declare -a PACKAGES=(
 )
 
 
-
-case "$OS_ID" in
-    arch)
-        echo "Detected Arch Linux"
         sudo pacman -Syu "${PACKAGES[@]}"
-        ;;
-    *)
-        echo "Unsupported distro $OS_ID"
-        exit 1
-        ;;
-esac
+
 
 
 sudo systemctl enable firewalld.service
@@ -101,23 +89,23 @@ done
 
 
 
-SRC_DIR="$HOME/rtktop"
-DEST_DIR="$HOME"
+mkdir -p "$HOME"
 
+rsync -a "$HOME/rtktop/Documents" "$HOME"
 
-mkdir -p "$DEST_DIR"
+rsync -a "$HOME/rtktop/Pictures" "$HOME"
 
-rsync -a "$SRC_DIR/Documents" "$DEST_DIR"
-
-rsync -a "$SRC_DIR/Pictures" "$DEST_DIR"
-
-sudo cp "$SRC_DIR/default.conf" "/usr/lib/sddm/sddm.conf.d/"
-sudo cp "/Documents/sddm-themes/*/" "/usr/share/sddm/themes/" 
+sudo cp "$HOME/rtktop/default.conf" "/usr/lib/sddm/sddm.conf.d/"
+sudo cp -r "Documents/sddm-themes/*" "/usr/share/sddm/themes/"
 sudo mkdir /etc/sddm.conf.d/
-sudo cp "$SRC_DIR/sddm.conf" "/etc/sddm.conf.d/" 
+sudo cp "rtktop/sddm.conf" "/etc/sddm.conf.d" 
+
+sudo pacman -Rs dolphin firefox
 
 echo alias passgpu='bash ~./rtktop/gpu-passthrough.sh' >> .bashrc
 echo alias swaptheme='bash ~/rtktop/Documents/swaptheme.sh' >> .bashrc
 
-#call theme script before saying its done instead of running this then running the theme script just to start with a theme
-echo "Shits done"
+#Theme swapping script
+./Documents/swaptheme.sh
+
+echo "Shits done, Run "swaptheme" to apply themes"
